@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//
+// Enums
+//
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AssetType {
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+//
+// User & Authentication
+//
+model User {
+  id                   String   @id @default(uuid())
+  email                String   @unique
+  name                 String?
+  role                 Role     @default(USER)
+  emailVerified        Boolean
+  image                String?
+  stripeCustomerId     String? // 👈 add this line
+  bookmarkedArticleIds String[] @default([])
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+
+  subscriptions Subscription[]
+
+  author Author? // <-- no @relation attributes here  authorId  String? @unique
+
+  @@map("user")
+}
+
+model Author {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  name      String
+  bio       String?
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id]) // FK on Author side
+  articles  Article[] @relation("AuthorArticles")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+//
+// Content Models
+//
+model Article {
+  id                   String   @id @default(uuid())
+  title                String
+  slug                 String   @unique
+  excerpt              String?
+  published            Boolean  @default(true)
+  publishedAt          DateTime @default(now())
+  bookmarkedArticleIds String[] @default([])
+  views                Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId String
+  author   Author   @relation("AuthorArticles", fields: [authorId], references: [id], onDelete: Cascade)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  assetId String?       @unique
+  asset   ArticleAsset? @relation(fields: [assetId], references: [id])
+
+  parts      ArticlePart[]
+  ArticleTag ArticleTag[]
+
+  @@map("article")
+}
+
+model ArticlePart {
+  id         String      @id @default(uuid())
+  title      String?
+  order      Int
+  articleId  String
+  article    Article     @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  paragraphs Paragraph[]
+}
+
+model Paragraph {
+  id            String      @id @default(uuid())
+  content       String
+  order         Int
+  articlePartId String
+  articlePart   ArticlePart @relation(fields: [articlePartId], references: [id], onDelete: Cascade)
+}
+
+model ArticleAsset {
+  id      String    @id @default(uuid())
+  type    AssetType
+  url     String
+  legend  String?
+  altText String?
+
+  article Article?
+}
+
+//
+// Taxonomy
+//
+model Category {
+  id       String    @id @default(uuid())
+  name     String
+  slug     String    @unique
+  articles Article[]
+}
+
+model Tag {
+  id       String       @id @default(uuid())
+  name     String       @unique
+  slug     String       @unique
+  articles ArticleTag[]
+}
+
+model ArticleTag {
+  articleId String
+  tagId     String
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+}
+
+//
+// Payments
+//
+model Subscription {
+  id                   String   @id @default(uuid())
+  stripeCustomerId     String
+  stripeSubscriptionId String
+  status               String
+  currentPeriodEnd     DateTime
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

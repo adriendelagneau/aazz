@@ -1,15 +1,28 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Noticia_Text,
+  Poppins,
+} from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+import { SignInModal } from "@/components/auth/log-in/sign-in-modal";
+import { RecaptchaProvider } from "@/components/providers/google-captcha-provider";
+import { TanstackProvider } from "@/components/providers/tanstackprovider";
+import { ThemeProvider } from "@/components/providers/themes-provider";
+
+const noticaText = Noticia_Text({
+  variable: "--font-notica",
+  weight: ["400"],
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["900"],
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +36,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr" suppressHydrationWarning className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${noticaText.variable} ${poppins.variable} scrollbar scrollbar-none`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <RecaptchaProvider>
+            <SignInModal />
+            <Toaster />
+            <TanstackProvider>
+              <div className="font-notica">
+                <div className="min-h-screen font-notica">{children}</div>
+              </div>
+            </TanstackProvider>
+          </RecaptchaProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
