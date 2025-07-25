@@ -77,18 +77,6 @@ export interface TArticle {
 }
 
 
-
-
-export type TSimpleArticle = {
-  id: string;
-  title: string;
-  slug: string;
-  imageUrl: string;
-  alt: string;
-};
-
-
-
 export interface ArticleWithExtras {
   id: string;
   slug: string;

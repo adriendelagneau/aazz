@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Prisma, PrismaClient } from "@/generated/prisma";
 import { getUser } from "@/lib/auth/auth-session";
 import { articleSchema } from "@/lib/validation";
-import { TArticle, TSimpleArticle } from "@/types";
+import { TArticle } from "@/types";
 
 
 
@@ -154,95 +154,6 @@ export async function createArticle(values: z.infer<typeof articleSchema>) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-export async function getArticles() {
-  return prisma.article.findMany({
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-       // email
-        },
-      },
-      category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true, // add slug if you use it in URLs
-        },
-      },
-      parts: {
-        orderBy: { order: "asc" },
-        include: {
-          paragraphs: {
-            orderBy: { order: "asc" },
-          },
-        },
-      },
-      ArticleTag: {
-        include: {
-          tag: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-      asset: {
-        select: {
-          id: true,
-          type: true,     // Include asset type to match creation logic
-          url: true,
-          altText: true,
-          legend: true,
-        },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-}
-
-export const getSimpleArticles = async (): Promise<TSimpleArticle[]> => {
-  const articles = await prisma.article.findMany({
-    take: 12,
-    select: {
-      id: true,
-      title: true,
-      slug: true, // ✅ Include slug here
-      asset: {
-        select: {
-          url: true,
-          altText: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  return articles.map((a) => ({
-    id: a.id,
-    title: a.title,
-    slug: a.slug, // ✅ Include slug in the result
-    imageUrl: a.asset?.url ?? "",
-    alt: a.asset?.altText ?? "Article image",
-  }));
-};
-
 export async function getArticleBySlug(slug: string) {
   if (!slug) throw new Error("Slug is required");
 
@@ -342,11 +253,6 @@ export async function toggleBookmark(articleId: string) {
 
   return { bookmarked: !alreadyBookmarked };
 }
-
-
-
-
-
 
 
 
