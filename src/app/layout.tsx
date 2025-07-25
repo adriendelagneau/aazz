@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning className="scroll-smooth">
+    <html lang="fr" suppressHydrationWarning >
       <body
         className={`${noticaText.variable} ${poppins.variable} scrollbar scrollbar-none`}
       >
