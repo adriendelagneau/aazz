@@ -5,6 +5,7 @@ import { getCategories } from "@/actions/category-actions";
 import CategoriesHeader from "@/components/categories-header";
 
 import MainCard from "./components/main-card";
+import MainGutter from "./components/main-gutter";
 
 export default async function Home() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,7 +35,7 @@ export default async function Home() {
 
         {/* Sticky Gutter */}
         <div className="sticky top-24 z-0 hidden h-screen min-h-screen w-[250px] self-start 2xl:inline-block">
-          {/* <MainGutter /> */}
+          <MainGutter />
         </div>
       </div>
     </div>
