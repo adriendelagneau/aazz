@@ -11,7 +11,7 @@ const MainGutter = async () => {
   
     await fetchArticles({
       page: 1,
-      pageSize: 5,
+      pageSize: 4,
       query: "",
       orderBy: "newest",
     });
