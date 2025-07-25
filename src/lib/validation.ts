@@ -48,3 +48,41 @@ export const resetPasswordSchema = z.object({
 });
 
 
+
+
+export const paragraphSchema = z.object({
+  content: z.string().min(1, "Paragraph content is required"),
+  order: z.number().int().nonnegative(),
+});
+
+export const partSchema = z.object({
+  title: z.string().optional(),
+  order: z.number().int().nonnegative(),
+  paragraphs: z.array(paragraphSchema).min(1, "At least one paragraph is required"),
+});
+
+export const articleSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  excerpt: z.string().optional(),
+  categoryId: z.string().uuid().optional(),
+  tagIds: z.array(z.string().uuid()),
+  parts: z.array(partSchema).min(1, "At least one part is required"),
+  asset: z
+    .object({
+      type: z.enum(["IMAGE", "VIDEO", "AUDIO"]),
+      url: z.string().url("Valid URL required"),
+      legend: z.string().optional(),
+      altText: z.string().optional(),
+    })
+    .optional(),
+});
+
+export type ArticleSchema = z.infer<typeof articleSchema>;
+
+export const authorSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  bio: z.string().optional(),
+  userId: z.string().min(1, "User ID is required"),
+});
+
+export type AuthorSchema = z.infer<typeof authorSchema>;

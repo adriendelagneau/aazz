@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -38,8 +38,8 @@ model User {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
-  sessions      Session[]
-  accounts      Account[]
+  sessions Session[]
+  accounts Account[]
 
   subscriptions Subscription[]
 
@@ -49,12 +49,13 @@ model User {
 }
 
 model Author {
-  id        String   @id @default(uuid())
-  slug      String   @unique
+  id        String    @id @default(uuid())
+  slug      String    @unique
   name      String
   bio       String?
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id]) // FK on Author side
+  image     String?
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id]) // FK on Author side
   articles  Article[] @relation("AuthorArticles")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -123,7 +124,7 @@ model Article {
   updatedAt DateTime @updatedAt
 
   authorId String
-  author   Author   @relation("AuthorArticles", fields: [authorId], references: [id], onDelete: Cascade)
+  author   Author @relation("AuthorArticles", fields: [authorId], references: [id], onDelete: Cascade)
 
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
