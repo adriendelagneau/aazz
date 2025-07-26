@@ -1,7 +1,7 @@
-// components/TrackArticleView.tsx
 "use client";
 
-import { useRouter } from "next/router";
+
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 interface TrackArticleViewProps {
@@ -17,7 +17,7 @@ export default function TrackArticleView({ articleId }: TrackArticleViewProps) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       try {
-        const res = await fetch("/api/log-view", {
+        const res = await fetch("/api/log-views", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ articleId, screenSize, timezone }),
