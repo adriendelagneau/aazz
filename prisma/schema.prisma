@@ -135,8 +135,23 @@ model Article {
   parts      ArticlePart[]
   ArticleTag ArticleTag[]
 
+  articleViews ArticleView[] // <-- Add this line for the relation
+
   @@map("article")
 }
+
+
+model ArticleView {
+  id         String   @id @default(uuid())
+  articleId  String
+  visitorId  String
+  viewedAt   DateTime @default(now())
+
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([visitorId, viewedAt])
+}
+
 
 model ArticlePart {
   id         String      @id @default(uuid())
