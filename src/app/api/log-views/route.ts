@@ -1,13 +1,18 @@
-// src/app/api/log-view/route.ts
 import crypto from "crypto";
 
 import { NextRequest, NextResponse } from "next/server";
 
 import { PrismaClient } from "@/generated/prisma";
+import { getUser } from "@/lib/auth/auth-session";
 
 const prisma = new PrismaClient();
 
-const MAX_VIEWS_PER_24H = 3;
+// Daily read limits per role
+const LIMITS = {
+    visitor: 1,
+    user: 3,
+    subscriber: Infinity,
+};
 
 function generateVisitorId(ip: string, userAgent: string, screenSize: string, timezone: string) {
     const raw = `${ip}|${userAgent}|${screenSize}|${timezone}`;
@@ -22,35 +27,87 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Missing data" }, { status: 400 });
         }
 
-        // Get IP address — note: in App Router, IP is from headers or request.ip (but may need custom extraction)
+        const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
         const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "0.0.0.0";
         const userAgent = request.headers.get("user-agent") || "unknown";
 
-        const visitorId = generateVisitorId(ip, userAgent, screenSize, timezone);
+        // Step 1: Auth
+        const currentUser = await getUser(); // returns null if not logged in
 
-        const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        let role: "visitor" | "user" | "subscriber" = "visitor";
+        let userId: string | null = null;
+        let visitorId: string | null = null;
 
-        const views = await prisma.articleView.count({
+        if (currentUser) {
+            const user = await prisma.user.findUnique({
+                where: { id: currentUser.id },
+                include: { subscriptions: true },
+            });
+
+            const isSubscribed = user?.subscriptions?.some(
+                (sub) =>
+                    sub.status === "active" &&
+                    sub.currentPeriodEnd &&
+                    sub.currentPeriodEnd > new Date()
+            );
+
+            role = isSubscribed ? "subscriber" : "user";
+            if (user) {
+                userId = user.id;
+            }
+        } else {
+            visitorId = generateVisitorId(ip, userAgent, screenSize, timezone);
+        }
+
+        // Step 2: Count recent views
+        const viewCount = await prisma.articleView.count({
             where: {
-                visitorId,
+                ...(visitorId ? { visitorId } : { userId }),
                 viewedAt: { gte: cutoff },
             },
         });
 
-        if (views >= MAX_VIEWS_PER_24H) {
-            return NextResponse.json({ error: "Daily article limit reached" }, { status: 429 });
+        const dailyLimit = LIMITS[role];
+
+        if (viewCount >= dailyLimit) {
+            return NextResponse.json(
+                { error: "Daily article limit reached", remaining: 0 },
+                { status: 429 }
+            );
         }
 
-        await prisma.articleView.create({
-            data: {
-                visitorId,
+        // Step 3: Avoid duplicate logging of same article in same day
+        const alreadyViewed = await prisma.articleView.findFirst({
+            where: {
                 articleId,
+                viewedAt: { gte: cutoff },
+                ...(visitorId ? { visitorId } : { userId }),
             },
         });
 
-        return NextResponse.json({ ok: true });
+        if (!alreadyViewed) {
+            await prisma.articleView.create({
+                data: {
+                    articleId,
+                    userId,
+                    visitorId,
+                },
+            });
+
+            // Increment article total views
+            await prisma.article.update({
+                where: { id: articleId },
+                data: { views: { increment: 1 } },
+            });
+        }
+
+        return NextResponse.json({
+            ok: true,
+            remaining: dailyLimit - viewCount - 1,
+            role,
+        });
     } catch (err) {
-        console.error("log-view error", err);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        console.error("Error logging view:", err);
+        return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 }
