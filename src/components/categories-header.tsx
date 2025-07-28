@@ -39,6 +39,7 @@ const CategoriesHeader = ({ categories }: CategoriesHeaderProps) => {
         <Button
           variant={!activeCategory ? "default" : "ghost"}
           onClick={() => onSelect(null)}
+          className="capitalize text-xl cursor-pointer"
           >
           All
         </Button>
@@ -52,7 +53,7 @@ const CategoriesHeader = ({ categories }: CategoriesHeaderProps) => {
           key={c.id}
           variant={isActive ? "default" : "ghost"}
           onClick={() => onSelect(c.slug)}
-          className="capitalize text-xl"
+          className="capitalize text-xl cursor-pointer"
           >
             {c.name}
           </Button>

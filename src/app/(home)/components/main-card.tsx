@@ -8,9 +8,9 @@ const MainCard = ({ article }: { article: TArticle }) => {
   const firstParagraph = article.parts?.[0]?.paragraphs?.[0]?.content ?? "";
 
   return (
-    <div className="mx-auto mb-4 flex max-w-screen-xl flex-col gap-6 p-3 lg:flex-row-reverse">
+    <div className="mx-auto mb-6 flex max-w-screen-xl flex-col gap-6 p-3 lg:flex-row-reverse">
       {/* Image Section */}
-      <div className="rounded-sm lg:w-1/2">
+      <div className="rounded-sm lg:w-2/3">
         {article.asset ? (
           <Link href={`/article/${article.slug}`} className="block">
             <Image
@@ -35,8 +35,8 @@ const MainCard = ({ article }: { article: TArticle }) => {
       </div>
 
       {/* Text Section */}
-      <div className="flex flex-col justify-between pr-3 lg:w-1/2">
-        <div className="text-3xl font-semibold leading-snug line-clamp-2 xl:text-4xl xl:leading-tight">
+      <div className="flex flex-col justify-between  lg:w-1/3">
+        <div className="text-2xl font-bold leading-snug line-clamp-3 xl:text-2xl xl:leading-tight">
           <Link href={`/article/${article.slug}`}>
             {article.title}
           </Link>

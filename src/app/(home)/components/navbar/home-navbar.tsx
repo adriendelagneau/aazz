@@ -14,7 +14,7 @@ export const HomeNavbar = () => {
   const { scrollY } = useScrollDirection();
 
   return (
-    <div className=" bg-background fixed top-0 left-0 z-50 flex h-16 w-full items-center px-2">
+    <div className="bg-background fixed top-0 left-0 z-50 flex h-16 w-full items-center px-2">
       <div className="flex w-full items-center justify-between gap-2 md:gap-4">
         {/** Menu & Logo */}
 
@@ -25,13 +25,15 @@ export const HomeNavbar = () => {
         </div>
 
         {/* Show only if scrollY > 400 */}
-        {scrollY > 400 && (
-          <Link href={"/"}>
-            <div className="font-main-title flex-1 text-center text-3xl font-semibold transition-all">
-              La voie de l&apos;info
-            </div>
-          </Link>
-        )}
+        <Link href="/">
+          <div
+            className={`font-main-title flex-1 text-center text-3xl font-semibold transition-colors duration-300 ${
+              scrollY > 400 ? "text-primary-foreground w-auto" : "text-background w-0 overflow-hidden"
+            }`}
+          >
+            La voie de l&apos;info
+          </div>
+        </Link>
 
         <div className="flex flex-1 items-center justify-end gap-3">
           {/** toggle theme button */}
