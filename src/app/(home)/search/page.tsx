@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { fetchArticles } from "@/actions/article-actions";
 import { getAuthors } from "@/actions/author-actions";
 import { getCategories } from "@/actions/category-actions";
+import { CategoryCarousel } from "@/components/carousel/category-carousel";
 import CategoriesHeader from "@/components/categories-header";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 
@@ -33,6 +34,7 @@ const SearchPage = async ({ params }: ProductPageProps) => {
   return (
     <div className="no-scrollbar overflow-y-auto">
       <CategoriesHeader categories={categories} />
+      <CategoryCarousel categories={categories} />
       <div className="flex w-full items-center justify-between px-4 py-2">
         <SearchBox />
         <div className="flex items-center gap-2">

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { fetchArticles, getSimpleArticles } from "@/actions/article-actions";
 import { getCategories } from "@/actions/category-actions";
+import { CategoryCarousel } from "@/components/carousel/category-carousel";
 import { FilterCarousel } from "@/components/carousel/filter-carousel";
 import CategoriesHeader from "@/components/categories-header";
 
@@ -26,6 +27,7 @@ export default async function Home() {
   return (
     <div className="mx-auto min-h-screen w-full max-w-7xl gap-4 px-4">
       <CategoriesHeader categories={categories} />
+      <CategoryCarousel categories={categories} />
       <div className="relative z-10 mx-auto flex w-full max-w-7xl gap-4 px-4">
         {/* Content Area */}
         <ul className="">

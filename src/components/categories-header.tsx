@@ -34,34 +34,25 @@ const CategoriesHeader = ({ categories }: CategoriesHeaderProps) => {
   const isSearchPage = pathname === "/search";
 
   return (
-    <div className="mb-20 flex w-full flex-wrap justify-center gap-1 px-2 py-4">
+    <div className="mb-20 hidden lg:flex w-full text-xl flex-wrap justify-center gap-1 px-2 py-4">
       {isSearchPage && (
         <Button
           variant={!activeCategory ? "default" : "ghost"}
-          className={`text-xl font-medium transition-all ${
-            !activeCategory
-              ? "bg-primary text-white"
-              : "hover:text-secondary-foreground"
-          }`}
           onClick={() => onSelect(null)}
-        >
+          >
           All
         </Button>
       )}
 
       {categories.map((c) => {
         const isActive = activeCategory === c.slug;
-
+        
         return (
           <Button
-            key={c.id}
-            variant={isActive ? "default" : "ghost"}
-            className={`cursor-pointer text-xl font-medium transition-all ${
-              isActive
-                ? "bg-primary text-white"
-                : "hover:text-secondary-foreground"
-            }`}
-            onClick={() => onSelect(c.slug)}
+          key={c.id}
+          variant={isActive ? "default" : "ghost"}
+          onClick={() => onSelect(c.slug)}
+          className="capitalize text-xl"
           >
             {c.name}
           </Button>
