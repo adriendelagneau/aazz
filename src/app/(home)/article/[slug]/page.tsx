@@ -5,6 +5,7 @@ import { getArticleBySlug } from "@/actions/article-actions";
 import SingleCard from "./components/SingleCard";
 import TrackArticleView from "./components/track-article-view";
 import MainGutter from "../../components/main-gutter";
+// import { LimitDialog } from "./components/limit-dialog";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -45,6 +46,7 @@ const ArticlePage = async ({ params }: ProductPageProps) => {
         </div>
       </div>
       <TrackArticleView articleId={article.id} />
+      {/* <LimitDialog open={limitReached} /> */}
     </>
   );
 };

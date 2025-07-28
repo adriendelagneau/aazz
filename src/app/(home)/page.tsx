@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 
-import { fetchArticles } from "@/actions/article-actions";
+import { fetchArticles, getSimpleArticles } from "@/actions/article-actions";
 import { getCategories } from "@/actions/category-actions";
+import { FilterCarousel } from "@/components/carousel/filter-carousel";
 import CategoriesHeader from "@/components/categories-header";
 
 import MainCard from "./components/main-card";
@@ -19,6 +20,8 @@ export default async function Home() {
   if (!initialData) notFound();
 
   const categories = await getCategories();
+
+  const sliderArticles = await getSimpleArticles();
 
   return (
     <div className="mx-auto min-h-screen w-full max-w-7xl gap-4 px-4">
@@ -38,6 +41,7 @@ export default async function Home() {
           <MainGutter />
         </div>
       </div>
+      <FilterCarousel articles={sliderArticles} />
     </div>
   );
 }

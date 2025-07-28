@@ -8,7 +8,7 @@ import { z } from "zod";
 import { Prisma, PrismaClient } from "@/generated/prisma";
 import { getUser } from "@/lib/auth/auth-session";
 import { articleSchema } from "@/lib/validation";
-import { TArticle } from "@/types";
+import { TArticle, TSimpleArticle } from "@/types";
 
 
 
@@ -254,7 +254,33 @@ export async function toggleBookmark(articleId: string) {
   return { bookmarked: !alreadyBookmarked };
 }
 
+export const getSimpleArticles = async (): Promise<TSimpleArticle[]> => {
+  const articles = await prisma.article.findMany({
+    take: 12,
+    select: {
+      id: true,
+      title: true,
+      slug: true, // ✅ Include slug here
+      asset: {
+        select: {
+          url: true,
+          altText: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
+  return articles.map((a) => ({
+    id: a.id,
+    title: a.title,
+    slug: a.slug, // ✅ Include slug in the result
+    imageUrl: a.asset?.url ?? "",
+    alt: a.asset?.altText ?? "Article image",
+  }));
+};
 
 
 export async function fetchArticles({

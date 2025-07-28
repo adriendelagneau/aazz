@@ -10,7 +10,7 @@ import { TArticle } from "@/types";
 import { HomeMainGrid } from "./home-main-grid";
 
 interface InfiniteScrollProps {
-  initalArticles: TArticle[];
+  initialArticles: TArticle[];
   hasMoreInitial: boolean;
   initialQuery?: string;
   initialCategorySlug?: string;
@@ -19,7 +19,7 @@ interface InfiniteScrollProps {
 }
 
 export const InfiniteScroll = ({
-  initalArticles,
+  initialArticles,
   hasMoreInitial,
   initialQuery,
   initialCategorySlug,
@@ -70,7 +70,7 @@ export const InfiniteScroll = ({
       initialData: {
         pages: [
           {
-            articles: initalArticles,
+            articles: initialArticles,
             hasMore: hasMoreInitial,
           },
         ],

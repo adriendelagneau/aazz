@@ -14,7 +14,8 @@ const eslintConfig = [
   {
     ignores: [
       "src/generated",
-      "src/components/ui"
+      "src/components/ui",
+      "src/app/api/webhook/route.ts",
     ],
   },
   ...compat.config({

@@ -59,3 +59,18 @@ export async function createAuthor({
         return { error: "Error creating author." };
     }
 }
+
+export async function getAuthors() {
+  const authors = await prisma.author.findMany({
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+
+  return authors;
+}
