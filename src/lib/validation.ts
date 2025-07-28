@@ -86,3 +86,29 @@ export const authorSchema = z.object({
 });
 
 export type AuthorSchema = z.infer<typeof authorSchema>;
+
+
+
+
+
+
+export const assetSchema = z.object({
+  type: z.enum(["IMAGE", "VIDEO"]),
+  url: z.string().url("Invalid asset URL"),
+  legend: z.string().optional(),
+  altText: z.string().optional(),
+});
+
+export const videoShortSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  duration: z
+    .string()
+    .transform((val) => Number(val))
+    .refine((val) => !isNaN(val) && val >= 0, {
+      message: "Duration must be a positive number",
+    }),
+  asset: assetSchema, // contains the url now
+});
+
+export type VideoShortInput = z.infer<typeof videoShortSchema>;

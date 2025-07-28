@@ -108,7 +108,7 @@ export async function createArticle(values: z.infer<typeof articleSchema>) {
     // 4. Create asset if provided
     let createdAssetId: string | null = null;
     if (asset) {
-      const createdAsset = await tx.articleAsset.create({
+      const createdAsset = await tx.asset.create({
         data: {
           type: asset.type,
           url: asset.url,
