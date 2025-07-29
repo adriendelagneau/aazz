@@ -50,3 +50,21 @@ export async function createVideoShort(data: VideoShortInput) {
   revalidatePath("/"); // Adjust the path as needed
 }
 
+export async function getLatestVideoShorts() {
+  try {
+    const videos = await prisma.videoShort.findMany({
+      orderBy: {
+        publishedAt: "desc",
+      },
+      take: 8,
+      include: {
+        asset: true,
+      },
+    });
+
+    return videos;
+  } catch (error) {
+    console.error("[getLatestVideoShorts]", error);
+    throw new Error("Failed to fetch latest video shorts.");
+  }
+}

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { createArticle } from "@/actions/article-actions";
 import { CloudinaryUploadButton } from "@/components/cloudinary-upload-button";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -54,6 +55,7 @@ export function CreateArticleForm({
         legend: "",
         altText: "",
       },
+      isBreaking: false, // ✅ add this
     },
   });
 
@@ -347,7 +349,24 @@ export function CreateArticleForm({
             Add Section
           </Button>
         </div>
-
+        <FormField
+          control={control}
+          name="isBreaking"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-3">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel className="text-sm font-medium">
+                Mark as Breaking News
+              </FormLabel>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {/* Submit */}
         <Button type="submit">Create Article</Button>
       </form>

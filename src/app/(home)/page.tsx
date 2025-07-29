@@ -2,9 +2,12 @@ import { notFound } from "next/navigation";
 
 import { fetchArticles, getSimpleArticles } from "@/actions/article-actions";
 import { getCategories } from "@/actions/category-actions";
+import { getLatestVideoShorts } from "@/actions/videos-actions";
 import { CategoryCarousel } from "@/components/carousel/category-carousel";
 import { FilterCarousel } from "@/components/carousel/filter-carousel";
 import CategoriesHeader from "@/components/categories-header";
+import { ScrollToTop } from "@/components/scroll-top";
+// import { VideoSlider } from "@/components/video-slider";
 
 import MainCard from "./components/main-card";
 import MainGutter from "./components/main-gutter";
@@ -23,6 +26,10 @@ export default async function Home() {
   const categories = await getCategories();
 
   const sliderArticles = await getSimpleArticles();
+
+  const shorts = await getLatestVideoShorts();
+
+  console.log(shorts, "shorts");
 
   return (
     <div className="mx-auto min-h-screen w-full max-w-7xl gap-4 px-4">
@@ -44,6 +51,8 @@ export default async function Home() {
         </div>
       </div>
       <FilterCarousel articles={sliderArticles} />
+      {/* <VideoSlider videos={shorts} /> */}
+      <ScrollToTop />
     </div>
   );
 }

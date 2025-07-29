@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { getCategories } from "@/actions/category-actions";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
+import { Footer } from "./components/footer/footer";
 import { HomeNavbar } from "./components/navbar/home-navbar";
 import { HomeSidebar } from "./components/sidebar/hoeme-sidebar";
 import Title from "./components/title";
@@ -24,11 +25,12 @@ export default async function HomeLayout({
         <HomeNavbar />
         <div className="flex">
           <HomeSidebar categories={categories} />
-          <main className="flex-1 pt-[4rem] w-full max-w-screen-xl mx-auto">
-               <Title />
+          <main className="mx-auto w-full max-w-screen-xl flex-1 pt-[4rem] min-h-screen">
+            <Title />
             {children}
-            </main>
+          </main>
         </div>
+        <Footer />
       </div>
     </SidebarProvider>
   );

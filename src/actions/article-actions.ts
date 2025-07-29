@@ -10,6 +10,8 @@ import { getUser } from "@/lib/auth/auth-session";
 import { articleSchema } from "@/lib/validation";
 import { TArticle, TSimpleArticle } from "@/types";
 
+import { notifyBreakingNews } from "./notification-actions";
+
 
 
 const prisma = new PrismaClient();
@@ -52,7 +54,7 @@ export async function createArticle(values: z.infer<typeof articleSchema>) {
     };
   }
 
-  const { title, excerpt, categoryId, tagIds, parts, asset } = validatedFields.data;
+  const { title, excerpt, categoryId, isBreaking, tagIds, parts, asset } = validatedFields.data;
   const slug = await generateUniqueSlug(title);
 
   const createdArticle = await prisma.$transaction(async (tx) => {
@@ -64,6 +66,7 @@ export async function createArticle(values: z.infer<typeof articleSchema>) {
         excerpt,
         authorId: author.id, // ✅ uses Author.id, not User.id
         categoryId,
+        isBreaking,
         published: true,
         publishedAt: new Date(),
         ArticleTag: {
@@ -150,6 +153,9 @@ export async function createArticle(values: z.infer<typeof articleSchema>) {
 
   revalidatePath("/");
 
+  if (isBreaking) {
+  await notifyBreakingNews(createdArticle.id, createdArticle.title);
+}
   return createdArticle;
 }
 

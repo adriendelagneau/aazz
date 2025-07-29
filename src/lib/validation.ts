@@ -65,6 +65,7 @@ export const articleSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   excerpt: z.string().optional(),
   categoryId: z.string().uuid().optional(),
+  isBreaking: z.boolean().optional(),
   tagIds: z.array(z.string().uuid()),
   parts: z.array(partSchema).min(1, "At least one part is required"),
   asset: z

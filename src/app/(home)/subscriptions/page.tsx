@@ -51,7 +51,7 @@ const SubscriptionPage = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-6 p-6">
+    <div className="flex  w-full flex-col items-center justify-center gap-6 p-6">
       <h1 className="mt-12 text-3xl">Choose your subscription plan</h1>
       <SubscribeCards
         onSubscribe={handleSubscribe}

@@ -1,10 +1,11 @@
 import React from "react";
-import VideoShortForm from "./components/videos-shorts-form";
+
+// import VideoShortForm from "./components/videos-shorts-form";
 
 const page = () => {
   return (
     <div>
-      <VideoShortForm />
+      {/* <VideoShortForm /> */}
     </div>
   );
 };

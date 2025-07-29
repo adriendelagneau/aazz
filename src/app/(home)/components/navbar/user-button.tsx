@@ -1,6 +1,6 @@
 "use client";
 
-import { ClapperboardIcon, LogOutIcon, User2Icon } from "lucide-react";
+import { LogOutIcon, User2Icon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -22,10 +22,7 @@ export const UserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="flex h-8 w-8 cursor-pointer items-center justify-center">
         <Avatar className="">
-          <AvatarImage
-            src={user?.image || undefined}
-            alt="User Avatar"
-          />
+          <AvatarImage src={user?.image || undefined} alt="User Avatar" />
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
@@ -33,13 +30,6 @@ export const UserButton = () => {
           <DropdownMenuItem className="w-full cursor-pointer">
             <User2Icon className="mr-2 h-4 w-4" />
             Profile
-          </DropdownMenuItem>
-        </Link>
-
-        <Link href={"/studio"} className="flex gap-x-2">
-          <DropdownMenuItem className="w-full cursor-pointer">
-            <ClapperboardIcon className="mr-2 h-4 w-4" />
-            Studio
           </DropdownMenuItem>
         </Link>
 
