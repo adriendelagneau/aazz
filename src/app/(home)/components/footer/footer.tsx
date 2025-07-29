@@ -12,9 +12,9 @@ export function Footer() {
       <div className="container grid grid-cols-1 gap-10 md:grid-cols-4 mx-2">
         {/* 1. Branding */}
         <div>
-          <h2 className="text-foreground text-xl font-bold">DailyNews</h2>
+          <h2 className="text-foreground text-xl font-bold">La voie de l&apos;info</h2>
           <p className="mt-2 max-w-xs">
-            Your trusted source for daily updates and breaking stories.
+            Votre repère dans l&apos;actualité
           </p>
         </div>
 

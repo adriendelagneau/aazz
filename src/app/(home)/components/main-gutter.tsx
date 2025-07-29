@@ -11,7 +11,7 @@ const MainGutter = async () => {
   
     await fetchArticles({
       page: 1,
-      pageSize: 4,
+      pageSize: 5,
       query: "",
       orderBy: "newest",
     });
@@ -45,7 +45,7 @@ export const MainGutterCard = ({ article }: { article: TArticle }) => {
           alt={article.asset?.altText || "alt"}
         />
       </div>
-      <p className="text-md font-semibold">{article.title}</p>
+      <p className="text-md font-semibold line-clamp-3">{article.title}</p>
     </div>
   );
 };
