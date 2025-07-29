@@ -7,16 +7,16 @@ const prisma = new PrismaClient();
 
 async function main() {
     const tags = [
-        "Politics",
-        "Economy",
+        "Politique",
+        "Économie",
         "Sports",
-        "Technology",
-        "Health",
-        "Entertainment",
-        "World",
+        "Technologie",
+        "Santé",
+        "Divertissement",
+        "Monde",
         "Local",
         "Opinion",
-        "Breaking",
+        "Actualité",
     ];
 
     for (const name of tags) {

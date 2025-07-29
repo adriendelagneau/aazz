@@ -43,7 +43,7 @@ const SingleCard = ({ article }: { article: TArticle }) => {
             <h3 className="mb-6 text-2xl font-semibold">{c.title}</h3>
             <div className="text-xl leading-10 first-letter:text-2xl" key={i}>
               {c.paragraphs.map((p, j) => (
-                <div key={j} className="">
+                <div key={j} className="mt-6">
                   {p.content}
                 </div>
               ))}

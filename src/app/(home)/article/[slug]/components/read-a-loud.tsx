@@ -10,7 +10,7 @@ export function ReadAloudButton({ text }: { text: string }) {
 
   const speak = () => {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
+    utterance.lang = "fr-FR";
     utterance.onend = () => setSpeaking(false);
 
     speechSynthesis.cancel(); // Stop previous utterances
